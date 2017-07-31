@@ -23,4 +23,4 @@ function circleMarker (props = {}) {
   }
 }
 
-module.exports = circleMarker
+export default circleMarker

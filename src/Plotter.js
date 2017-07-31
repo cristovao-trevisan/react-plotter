@@ -24,8 +24,10 @@ class Plotter extends React.Component {
     initialData: [],
     appendData: [],
     dataSize: 100,
-    max: 50,
-    min: -50
+    pixelSkip: 1,
+    max: 100,
+    min: -100,
+    useMean: true
   }
 
   static propTypes = {
@@ -36,19 +38,12 @@ class Plotter extends React.Component {
     max: PropTypes.number,
     min: PropTypes.number,
     dataSize: PropTypes.number,
-    style: PropTypes.func.isRequired
-  }
-
-  /**
-   * @abstract
-   * @param {CanvasRenderingContext2D} context
-   * @param {Object} options
-   * @param {number} options.x X base for this point
-   * @param {number} options.y Y base for this point
-   * @param {number} options.length Y size for this point
-   */
-  drawValue (context, {x, y, length}) {
-    throw new Error('Abstract Function Call')
+    style: PropTypes.func.isRequired,
+    pixelSkip: (props, propName, componentName) => {
+      if (!Number.isInteger(props[propName])) return new Error('Must be an integer')
+      if (props[propName] < 1) return new Error('Must be greater than 1')
+    },
+    useMean: PropTypes.bool
   }
 
   /**
@@ -68,7 +63,7 @@ class Plotter extends React.Component {
     // x pixel range
     this.xSize = (this.props.width - 2 * MARGIN - ARROW_SIZE)
     // max points
-    this.maxPoints = this.xSize / 4
+    this.maxPoints = this.xSize / this.props.pixelSkip
     // delta x
     this.deltaX = this.xSize / Math.min(this.maxPoints, this.props.dataSize)
     this.deltaX = Math.floor(this.deltaX)
@@ -107,8 +102,9 @@ class Plotter extends React.Component {
    * @public
    * @desc Used by parent to add data (through refs)
    * @param {number[]} newData
+   * @param {boolean} [update=false] Used when the attributes are reset (inside the componentWillUpdate)
    */
-  addData (newData) {
+  addData (newData, update = false) {
     if (newData.length + this.dataBuffer.length > this.props.dataSize) {
       this.translationCount += newData.length + this.dataBuffer.length - this.props.dataSize
       this.translationCount = Math.min(this.translationCount, this.props.dataSize)
@@ -117,11 +113,14 @@ class Plotter extends React.Component {
     } else {
       this.dataBuffer = this.dataBuffer.concat(newData)
     }
-    this.renewCount += Math.min(newData.length, this.dataBuffer.length)
+    if (update) this.translationCount = this.dataBuffer.length
+    this.renewCount += newData.length
+    this.renewCount = Math.min(this.renewCount, this.props.dataSize)
     this.animationRequest = window.requestAnimationFrame(this.updateCanvas.bind(this))
   }
 
-  /** ALGO
+  /**
+   * ALGO
    1 - clear drawingBuffer
    2 - copy plotBuffer to drawingBuffer removing extra data
    3 - draw new data on drawingBuffer
@@ -130,21 +129,30 @@ class Plotter extends React.Component {
    6 - draw arrows on canvas
   */
   updateCanvas () {
+    if (this.renewCount < this.xSkip) return
     // 1
     this.drawingBufferContext.clearRect(0, 0, this.props.width, this.props.height)
     // 2
-    this.drawingBufferContext.drawImage(this.plotBuffer, -this.deltaX * Math.floor(this.translationCount / this.xSkip), 0)
-    this.drawingBufferContext.clearRect(0, 0, MARGIN, this.props.height)
+    let translation = -this.deltaX * Math.floor(this.translationCount / this.xSkip)
+    this.drawingBufferContext.drawImage(this.plotBuffer, translation, 0)
     // 3
-    for (let i = 0; i < this.renewCount; i += this.xSkip) {
+    for (var i = 0; i < this.renewCount - this.xSkip; i += this.xSkip) {
       let index = i + this.dataBuffer.length - this.renewCount
+      if (this.props.useMean) {
+        // console.log(index, i, this.dataBuffer.length, this.renewCount)
+        var length = this.dataBuffer.slice(index, index + this.xSkip).reduce((sum = 0, value) => (sum + value)) / this.xSkip
+      } else {
+        length = this.dataBuffer[index]
+      }
+      length *= this.ySize / this.range
       this.props.style(this.drawingBufferContext, {
         x: this.baseX + this.deltaX * index / this.xSkip,
         y: this.baseY,
-        length: this.dataBuffer[index] * this.ySize / this.range
+        deltaX: i === 0 ? -translation : 0,
+        length
       })
     }
-    this.renewCount = 0
+    this.renewCount -=  i - this.xSkip
     this.translationCount = 0
     // 4
     this.plotBufferContext.clearRect(0, 0, this.props.width, this.props.height)
@@ -152,6 +160,7 @@ class Plotter extends React.Component {
     // 5
     this.context.clearRect(0, 0, this.props.width, this.props.height)
     this.context.drawImage(this.plotBuffer, 0, 0)
+    this.context.clearRect(0, 0, MARGIN, this.props.height)
     // horizontal arrow
     drawArrow(this.context, this.baseX, this.baseY, this.props.width - 2 * MARGIN, ARROW_SIZE - 1, false)
     // vertical arrow
@@ -180,7 +189,7 @@ class Plotter extends React.Component {
     let oldBuffer = this.dataBuffer
     this.createBuffers()
     this.setAttributes()
-    this.addData(oldBuffer)
+    this.addData(oldBuffer, true)
   }
 
   componentWillUnmount () {
@@ -198,4 +207,4 @@ class Plotter extends React.Component {
   }
 }
 
-module.exports = Plotter
+export default Plotter
