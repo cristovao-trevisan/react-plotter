@@ -16,16 +16,14 @@ function lineStyle (props = {}) {
   let marker = props.marker
 
   let x, y, length
-
   return (context, options) => {
     context.save()
     context.lineWidth = strokeWidth
     context.strokeStyle = strokeColor
-    if (x && y) {
-      drawLine(context, x - (options.deltaX || 0), y - length, options.x, options.y - options.length)
+    let xi = x - (options.deltaX || 0)
+    if (x && y && xi < options.x) {
+      drawLine(context, xi, y - length, options.x, options.y - options.length)
       if (marker) marker(context, options.x, options.y - options.length)
-    } else {
-      console.log('pass')
     }
     x = options.x
     y = options.y

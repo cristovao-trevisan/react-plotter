@@ -139,7 +139,6 @@ class Plotter extends React.Component {
     for (var i = 0; i < this.renewCount - this.xSkip; i += this.xSkip) {
       let index = i + this.dataBuffer.length - this.renewCount
       if (this.props.useMean) {
-        // console.log(index, i, this.dataBuffer.length, this.renewCount)
         var length = this.dataBuffer.slice(index, index + this.xSkip).reduce((sum = 0, value) => (sum + value)) / this.xSkip
       } else {
         length = this.dataBuffer[index]
@@ -152,7 +151,7 @@ class Plotter extends React.Component {
         length
       })
     }
-    this.renewCount -=  i - this.xSkip
+    this.renewCount -= i - this.xSkip
     this.translationCount = 0
     // 4
     this.plotBufferContext.clearRect(0, 0, this.props.width, this.props.height)

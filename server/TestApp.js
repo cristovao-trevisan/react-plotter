@@ -54,6 +54,7 @@ export default class TestApp extends React.Component {
           height={400}
           dataSize={5000}
           pixelSkip={1}
+          initialData={sinewave(2000)}
           appendData={this.state.data} />
         <button onClick={() => this.setState({updateData: !this.state.updateData})}>
           {this.state.updateData ? 'Pause' : 'Play'}
