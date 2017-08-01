@@ -20,6 +20,7 @@ const plotterText =
 
 // ...
   <Plotter
+    style={LineStyle(...)}
     width={300}
     height={150}
     dataSize={100}
@@ -45,6 +46,11 @@ export const Plotter = () => (
         </Table.Row>
       </Table.Header>
       <Table.Body>
+        <Table.Row>
+          <Table.Cell>style</Table.Cell>
+          <Table.Cell>Function</Table.Cell>
+          <Table.Cell>{'Style function (called to print the data)'}</Table.Cell>
+        </Table.Row>
         <Table.Row>
           <Table.Cell>[width=300]</Table.Cell>
           <Table.Cell>number</Table.Cell>

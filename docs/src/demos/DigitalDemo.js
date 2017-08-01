@@ -54,7 +54,6 @@ export default class DigitalDemo extends React.Component {
   componentWillUpdate (nextProps, nextState) {
     for (let prop of styleProps) {
       if (nextState[prop] !== this.state[prop]) {
-        console.log('change style')
         this.style = DigitalStyle({
           strokeColor: this.state.strokeColor,
           strokeWidth: this.state.strokeWidth,
