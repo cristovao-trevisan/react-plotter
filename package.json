@@ -7,7 +7,7 @@
     "start": "webpack-dev-server",
     "prepublish": "npm run clean && npm run build",
     "build": "babel src -d dist --presets es2015,stage-0,react",
-    "build:docs": "webpack --config docs/webpack.config.js --env=prod --progress --profile --colors",
+    "build:docs": "NODE_ENV=production webpack --config docs/webpack.config.js --progress --profile --colors",
     "clean": "rm -rf dist",
     "test": "standard"
   },

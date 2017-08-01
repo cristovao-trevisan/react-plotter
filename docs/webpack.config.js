@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
@@ -28,8 +29,7 @@ module.exports = {
     }]
   },
   plugins: [
-    new ExtractTextPlugin('bundle.css')
-    /*
+    new ExtractTextPlugin('bundle.css'),
     new webpack.optimize.UglifyJsPlugin({
       beautify: false,
       mangle: {
@@ -41,6 +41,5 @@ module.exports = {
       },
       comments: false
     })
-    */
   ]
 }
