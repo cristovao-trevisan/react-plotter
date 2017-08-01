@@ -60,7 +60,6 @@ export default class App extends React.Component {
           <Menu vertical size='large' style={{width: '80%'}}>
             {MenuItem('Line')}
             {MenuItem('Digital')}
-            {MenuItem('API')}
             {ApiItens}
           </Menu>
         </div>

@@ -41780,7 +41780,6 @@ var App = function (_React$Component) {
             { vertical: true, size: 'large', style: { width: '80%' } },
             MenuItem('Line'),
             MenuItem('Digital'),
-            MenuItem('API'),
             _Api.ApiItens
           )
         ),
@@ -61812,7 +61811,7 @@ var codeString = function codeString(strokeColor, strokeWidth, hasMarker, marker
   return 'import LineStyle from \'react-plotter/plot-styles/line\'\nimport CircleMarker from \'react-plotter/markers/circle\'\n\n<Plotter\n  style={LineStyle({\n  strokeColor: \'' + strokeColor + '\',\n  strokeWidth: ' + strokeWidth + (hasMarker ? ',' : '') + '\n  ' + (hasMarker ? 'marker:\n    CircleMarker({circleColor: \'' + markerColor + '\'})\n  ' : '') + '})} />';
 };
 
-var styleProps = ['strokeColor', 'strokeColor', 'markerColor', 'hasMarker'];
+var styleProps = ['strokeColor', 'strokeWidth', 'markerColor', 'hasMarker'];
 
 var sinewave = (0, _waveGenerators.Sinewave)(10000, 10, 10000, 100);
 
@@ -90170,7 +90169,7 @@ var _temp = function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CircleMarker = exports.DigitalStyle = exports.LineStyle = exports.ApiItens = undefined;
+exports.CircleMarker = exports.DigitalStyle = exports.LineStyle = exports.Plotter = exports.ApiItens = undefined;
 
 var _react = __webpack_require__(1);
 
@@ -90196,7 +90195,198 @@ var MenuItem = function MenuItem(title) {
   );
 };
 
-var ApiItens = exports.ApiItens = [MenuItem('LineStyle'), MenuItem('DigitalStyle'), MenuItem('CircleMarker')];
+var ApiItens = exports.ApiItens = [MenuItem('Plotter'), MenuItem('LineStyle'), MenuItem('DigitalStyle'), MenuItem('CircleMarker')];
+
+var plotterText = 'import Plotter from \'react-plotter/Plotter\'\n\n// ...\n  <Plotter\n    width={300}\n    height={150}\n    dataSize={100}\n    pixelSkip={1}\n    max={100}\n    min={-100}\n    useMean={false}\n    initialData={[]}\n    appendData={this.state.data} />\n';
+var Plotter = exports.Plotter = function Plotter() {
+  return _react2.default.createElement(
+    'div',
+    { style: { width: '100%' }, id: 'Plotter' },
+    _react2.default.createElement(_semanticUiReact.Header, { as: 'h2', content: 'Plotter' }),
+    _react2.default.createElement(
+      _Code2.default,
+      null,
+      plotterText
+    ),
+    _react2.default.createElement(
+      _semanticUiReact.Table,
+      null,
+      _react2.default.createElement(
+        _semanticUiReact.Table.Header,
+        null,
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.HeaderCell,
+            null,
+            'Property'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.HeaderCell,
+            null,
+            'Type'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.HeaderCell,
+            null,
+            'Description'
+          )
+        )
+      ),
+      _react2.default.createElement(
+        _semanticUiReact.Table.Body,
+        null,
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[width=300]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[height=150]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[initialData=[]]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number[]'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[appendData=[]]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number[]'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[dataSize=100]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[pixelSkip=1]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'Pixels between points'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[max=100]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'Max Y Value'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[min=-100]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'number'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'Min Y Value'
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            '[useMean=true]'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'bool'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Cell,
+            null,
+            'Use mean calculation, otherwise median'
+          )
+        )
+      )
+    )
+  );
+};
 
 var lineText = 'import LineStyle from \'react-plotter/plot-styles/line\'\n\nlet style = LineStyle({\n  strokeWidth: 2,\n  strokeColor: \'#ffeedd\'\n})\n';
 var LineStyle = exports.LineStyle = function LineStyle() {
@@ -90244,12 +90434,13 @@ var LineStyle = exports.LineStyle = function LineStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props'
+            '[props=',
+            ']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[object]'
+            'object'
           )
         ),
         _react2.default.createElement(
@@ -90258,12 +90449,12 @@ var LineStyle = exports.LineStyle = function LineStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.strokeWidth'
+            '[props.strokeWidth=1]'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[number=1]'
+            'number'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90277,12 +90468,12 @@ var LineStyle = exports.LineStyle = function LineStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.strokeColor'
+            '[props.strokeColor=\'blue\']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[string=\'blue\']'
+            'string'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90296,14 +90487,12 @@ var LineStyle = exports.LineStyle = function LineStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.marker'
+            '[props.marker]'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[',
-            'function',
-            ']'
+            'function'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90362,12 +90551,13 @@ var DigitalStyle = exports.DigitalStyle = function DigitalStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props'
+            '[props=',
+            ']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[object]'
+            'object'
           )
         ),
         _react2.default.createElement(
@@ -90376,12 +90566,12 @@ var DigitalStyle = exports.DigitalStyle = function DigitalStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.strokeWidth'
+            '[props.strokeWidth=1]'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[number=1]'
+            'number'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90395,12 +90585,12 @@ var DigitalStyle = exports.DigitalStyle = function DigitalStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.strokeColor'
+            '[props.strokeColor=\'blue\']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[string=\'blue\']'
+            'string'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90414,14 +90604,12 @@ var DigitalStyle = exports.DigitalStyle = function DigitalStyle() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.marker'
+            '[props.marker]'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[',
-            'function',
-            ']'
+            'function'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90480,12 +90668,13 @@ var CircleMarker = exports.CircleMarker = function CircleMarker() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props'
+            '[props=',
+            ']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[object]'
+            'object'
           )
         ),
         _react2.default.createElement(
@@ -90494,12 +90683,12 @@ var CircleMarker = exports.CircleMarker = function CircleMarker() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.circleRadius'
+            '[props.circleRadius=2]'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[number=2]'
+            'number'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90513,12 +90702,12 @@ var CircleMarker = exports.CircleMarker = function CircleMarker() {
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            'props.circleColor'
+            '[props.circleColor=\'red\']'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
             null,
-            '[string=\'red\']'
+            'string'
           ),
           _react2.default.createElement(
             _semanticUiReact.Table.Cell,
@@ -90541,6 +90730,8 @@ var Api = function Api() {
       textAlign: 'center',
       content: 'API',
       style: { fontSize: '2.8em', fontWeight: 'normal' } }),
+    _react2.default.createElement(Plotter, null),
+    _react2.default.createElement('div', { style: { width: '100%', height: '30px' } }),
     _react2.default.createElement(LineStyle, null),
     _react2.default.createElement('div', { style: { width: '100%', height: '30px' } }),
     _react2.default.createElement(DigitalStyle, null),
@@ -90561,6 +90752,10 @@ var _temp = function () {
   __REACT_HOT_LOADER__.register(MenuItem, 'MenuItem', '/home/cristovao/Documents/react-plotter/docs/src/Api.js');
 
   __REACT_HOT_LOADER__.register(ApiItens, 'ApiItens', '/home/cristovao/Documents/react-plotter/docs/src/Api.js');
+
+  __REACT_HOT_LOADER__.register(plotterText, 'plotterText', '/home/cristovao/Documents/react-plotter/docs/src/Api.js');
+
+  __REACT_HOT_LOADER__.register(Plotter, 'Plotter', '/home/cristovao/Documents/react-plotter/docs/src/Api.js');
 
   __REACT_HOT_LOADER__.register(lineText, 'lineText', '/home/cristovao/Documents/react-plotter/docs/src/Api.js');
 

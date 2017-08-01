@@ -19,7 +19,7 @@ import CircleMarker from 'react-plotter/markers/circle'
 '})} />'
 )
 
-const styleProps = ['strokeColor', 'strokeColor', 'markerColor', 'hasMarker']
+const styleProps = ['strokeColor', 'strokeWidth', 'markerColor', 'hasMarker']
 
 const sinewave = Sinewave(10000, 10, 10000, 100)
 export default class LineDemo extends React.Component {
