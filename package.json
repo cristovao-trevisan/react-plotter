@@ -6,9 +6,11 @@
   "scripts": {
     "start": "webpack-dev-server",
     "prepublish": "npm run clean && npm run build",
+    "precommit": "npm run clean:docs && npm run build:docs",
     "build": "babel src -d dist --presets es2015,stage-0,react",
-    "build:docs": "NODE_ENV=production webpack --config docs/webpack.config.js --progress --profile --colors",
+    "build:docs": "NODE_ENV=production webpack --config docs/webpack.config.js -p --progress --profile --colors",
     "clean": "rm -rf dist",
+    "clean:docs": "rm -rf docs/bundle.* docs/assets",
     "test": "standard"
   },
   "author": "",
