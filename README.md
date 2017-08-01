@@ -1,8 +1,8 @@
 ## Installation
-
-(not available yet)
-
 `npm install react-plotter --save`
+
+## Demo
+[Live Demo Page](https://cristovao-trevisan.github.io/react-plotter/)
 
 ## Usage
 
