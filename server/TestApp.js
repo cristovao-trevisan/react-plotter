@@ -6,7 +6,7 @@ import digital from '../src/plot-styles/digital'
 import circleMarker from '../src/markers/circle'
 
 import {Sinewave} from '../src/helpers/waveGenerators'
-let sinewave = Sinewave(10000, 10, 10000, 100)
+let sinewave = Sinewave(10000, 33, 10000, 100)
 
 const styles = [
   line(),
@@ -21,7 +21,7 @@ export default class TestApp extends React.Component {
     this.state = {
       data: [],
       style: styles[0],
-      updateStyle: true,
+      updateStyle: false,
       updateData: true
     }
     this.styleCount = 0
@@ -31,10 +31,10 @@ export default class TestApp extends React.Component {
     setInterval(() => {
       if (this.state.updateData) {
         this.setState({
-          data: sinewave(100)
+          data: sinewave(1000)
         })
       }
-    }, 50)
+    }, 100)
     setInterval(() => {
       if (this.state.updateStyle) {
         this.styleCount = (this.styleCount + 1) % styles.length
@@ -52,10 +52,11 @@ export default class TestApp extends React.Component {
           style={this.state.style}
           width={600}
           height={400}
-          dataSize={5000}
+          dataSize={2000}
           pixelSkip={1}
-          initialData={sinewave(2000)}
-          appendData={this.state.data} />
+          initialData={[]}
+          appendData={this.state.data}
+          trigger={0} />
         <button onClick={() => this.setState({updateData: !this.state.updateData})}>
           {this.state.updateData ? 'Pause' : 'Play'}
         </button>

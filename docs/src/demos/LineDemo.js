@@ -9,14 +9,16 @@ const codeString = (strokeColor, strokeWidth, hasMarker, markerColor) => (
 `import LineStyle from 'react-plotter/plot-styles/line'
 import CircleMarker from 'react-plotter/markers/circle'
 
-<Plotter
-  style={LineStyle({
+const style = LineStyle({
   strokeColor: '${strokeColor}',
   strokeWidth: ${strokeWidth}${hasMarker ? ',' : ''}
   ` + (hasMarker ? `marker:
     CircleMarker({circleColor: '${markerColor}'})
-  ` : '') +
-'})} />'
+` : '') +
+`})
+<Plotter
+  data={this.state.data}
+  style={style}/>`
 )
 
 const styleProps = ['strokeColor', 'strokeWidth', 'markerColor', 'hasMarker']

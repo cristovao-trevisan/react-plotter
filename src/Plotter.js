@@ -12,12 +12,6 @@ const reRenderProps = ['width', 'height', 'dataSize', 'max', 'min', 'style']
  * @abstract
  */
 class Plotter extends React.Component {
-  constructor (props) {
-    super(props)
-
-    window.plotter = this
-  }
-
   static defaultProps = {
     width: 300,
     height: 150,
@@ -27,7 +21,8 @@ class Plotter extends React.Component {
     pixelSkip: 1,
     max: 100,
     min: -100,
-    useMean: true
+    useMean: true,
+    onlyFull: true
   }
 
   static propTypes = {
@@ -43,7 +38,8 @@ class Plotter extends React.Component {
       if (!Number.isInteger(props[propName])) return new Error('Must be an integer')
       if (props[propName] < 1) return new Error('Must be greater than 1')
     },
-    useMean: PropTypes.bool
+    useMean: PropTypes.bool,
+    trigger: PropTypes.number
   }
 
   /**
@@ -51,9 +47,11 @@ class Plotter extends React.Component {
    * @desc Update attributes based on props, called after any props change
    */
   setAttributes () {
+    this.completionBuffer = []
     this.dataBuffer = []
     this.renewCount = 0
     this.translationCount = 0
+    this.firstDraw = true
     // y data range
     this.range = this.props.max - this.props.min
     // x axis staring point
@@ -98,13 +96,55 @@ class Plotter extends React.Component {
     this.plotBufferContext = this.plotBuffer.getContext('2d')
   }
 
+  clearBuffers () {
+    this.context.clearRect(0, 0, this.props.width, this.props.height)
+    this.drawingBufferContext.clearRect(0, 0, this.props.width, this.props.height)
+    this.plotBufferContext.clearRect(0, 0, this.props.width, this.props.height)
+  }
+
   /**
    * @public
    * @desc Used by parent to add data (through refs)
    * @param {number[]} newData
    * @param {boolean} [update=false] Used when the attributes are reset (inside the componentWillUpdate)
    */
-  addData (newData, update = false) {
+  addData (data, redraw = false) {
+    let newData = data
+    let {trigger} = this.props
+    if (isFinite(trigger)) {
+      // filter data
+      let usesCompletionBuffer = this.props.onlyFull && !this.firstDraw
+      let buffer = usesCompletionBuffer ? this.completionBuffer : this.dataBuffer
+      let shouldTrigger = buffer.length === 0 ||
+        (usesCompletionBuffer// buffer empty
+          ? false
+          : buffer.length + newData.length >= this.props.dataSize// buffer full
+        )
+      if (shouldTrigger) {
+        let index = newData.findIndex((e, i) => newData[i - 1] <= trigger && e >= trigger)
+        if (index < 0) return
+        newData = newData.slice(index, index + this.props.dataSize)
+        if (!usesCompletionBuffer && newData.length + buffer.length > this.props.dataSize) {
+          this.firstDraw = false
+          usesCompletionBuffer = this.props.onlyFull
+          if (!usesCompletionBuffer) {
+            this.clearBuffers()
+            this.dataBuffer = []
+          }
+        }
+      }
+      if (usesCompletionBuffer) {
+        this.completionBuffer = this.completionBuffer.concat(newData).splice(0, this.props.dataSize)
+        if (this.completionBuffer.length === this.props.dataSize) {
+          newData = this.completionBuffer
+          this.completionBuffer = []
+        } else {
+          return
+        }
+      }
+    }
+
+    // add data
     if (newData.length + this.dataBuffer.length > this.props.dataSize) {
       this.translationCount += newData.length + this.dataBuffer.length - this.props.dataSize
       this.translationCount = Math.min(this.translationCount, this.props.dataSize)
@@ -113,10 +153,19 @@ class Plotter extends React.Component {
     } else {
       this.dataBuffer = this.dataBuffer.concat(newData)
     }
-    if (update) this.translationCount = this.dataBuffer.length
+    if (redraw) {
+      this.translationCount = this.dataBuffer.length
+    }
     this.renewCount += newData.length
     this.renewCount = Math.min(this.renewCount, this.props.dataSize)
     this.animationRequest = window.requestAnimationFrame(this.updateCanvas.bind(this))
+  }
+
+  drawArrows () {
+    // horizontal arrow
+    drawArrow(this.context, this.baseX, this.baseY, this.props.width - 2 * MARGIN, ARROW_SIZE - 1, false)
+    // vertical arrow
+    drawArrow(this.context, this.baseX, this.props.height - MARGIN, this.props.height - 2 * MARGIN, ARROW_SIZE - 1, true, this.invertedArrow)
   }
 
   /**
@@ -139,7 +188,7 @@ class Plotter extends React.Component {
     for (var i = 0; i < this.renewCount - this.xSkip; i += this.xSkip) {
       let index = i + this.dataBuffer.length - this.renewCount
       if (this.props.useMean) {
-        var length = this.dataBuffer.slice(index, index + this.xSkip).reduce((sum = 0, value) => (sum + value)) / this.xSkip
+        var length = this.dataBuffer.slice(index, index + this.xSkip).reduce((sum = 0, value) => (sum + value), 0) / this.xSkip
       } else {
         length = this.dataBuffer[index]
       }
@@ -160,10 +209,7 @@ class Plotter extends React.Component {
     this.context.clearRect(0, 0, this.props.width, this.props.height)
     this.context.drawImage(this.plotBuffer, 0, 0)
     this.context.clearRect(0, 0, MARGIN, this.props.height)
-    // horizontal arrow
-    drawArrow(this.context, this.baseX, this.baseY, this.props.width - 2 * MARGIN, ARROW_SIZE - 1, false)
-    // vertical arrow
-    drawArrow(this.context, this.baseX, this.props.height - MARGIN, this.props.height - 2 * MARGIN, ARROW_SIZE - 1, true, this.invertedArrow)
+    this.drawArrows()
   }
 
   componentDidMount () {
@@ -171,7 +217,7 @@ class Plotter extends React.Component {
     this.context = this.refs.canvas.getContext('2d')
     this.createBuffers()
     this.setAttributes()
-    this.addData(this.props.initialData)
+    this.addData(this.props.initialData, true)
   }
 
   shouldComponentUpdate (nextProps) {

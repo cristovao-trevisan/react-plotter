@@ -21,12 +21,11 @@ setInterval(() => {
   height={400}
   dataSize={5000}
   initialData={sinewave(1000)}
-  appendData={this.state.data} />
+  appendData={this.state.data}
+  trigger={0} />
 ```
 
 
 ## TODO
 
-- Trigger
-- Better Documentation
 - Tests

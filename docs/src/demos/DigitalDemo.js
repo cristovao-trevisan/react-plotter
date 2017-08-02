@@ -9,14 +9,16 @@ const codeString = (strokeColor, strokeWidth, markerColor) => (
 `import DigitalStyle from 'react-plotter/plot-styles/digital'
 import CircleMarker from 'react-plotter/markers/circle'
 
+const style = DigitalStyle({
+  strokeColor: '${strokeColor}',
+  strokeWidth: ${strokeWidth},
+  marker: CircleMarker({
+    circleColor: '${markerColor}'
+  })
+})
 <Plotter
-  style={DigitalStyle({
-    strokeColor: '${strokeColor}',
-    strokeWidth: ${strokeWidth},
-    marker: CircleMarker({
-      circleColor: '${markerColor}'
-    })
-  })} />
+  data={this.state.data}
+  style={style} />
 `)
 
 const styleProps = ['strokeWidth', 'strokeColor', 'markerColor']

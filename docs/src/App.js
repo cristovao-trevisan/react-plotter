@@ -5,7 +5,14 @@ import './index.css'
 
 import LineDemo from './demos/LineDemo'
 import DigitalDemo from './demos/DigitalDemo'
+import TriggerDemo from './demos/TriggerDemo'
 import Api, {ApiItens} from './Api'
+
+const MenuHeader = (title) => (
+  <Menu.Item style={{fontSize: 18}}>
+    {title}
+  </Menu.Item>
+)
 
 const MenuItem = (title) => (
   <Menu.Item>
@@ -55,22 +62,28 @@ export default class App extends React.Component {
             content='React-Plotter'
             style={{ fontSize: '3em', fontWeight: 'normal' }} />
         </div>
-        <div style={{float: 'left', width: '8%', height: '100%'}} />
-        <div style={{float: 'left', width: '20%', height: '100%'}}>
-          <Menu vertical size='large' style={{width: '80%'}}>
-            {MenuItem('Line')}
-            {MenuItem('Digital')}
-            {ApiItens}
-          </Menu>
+        <div style={{width: '100%', marginLeft: '8%', marginRight: '10%'}}>
+          <div style={{float: 'left', width: '20%', height: '100%'}}>
+            <Menu vertical size='large' style={{width: '80%'}}>
+              {MenuHeader('Examples')}
+              {MenuItem('Line')}
+              {MenuItem('Digital')}
+              {MenuItem('Trigger')}
+              {MenuHeader('API')}
+              {ApiItens}
+            </Menu>
+          </div>
+          <div style={{float: 'left', width: '60%'}}>
+            <Header as='h1' textAlign='center' content='Examples'
+              style={{ fontSize: '2.8em', fontWeight: 'normal' }} />
+            {SegmentItem('Line', <LineDemo showCode={!!this.state.showCode['Line']} />, this.onShowCodeClick)}
+            {SegmentItem('Digital', <DigitalDemo showCode={!!this.state.showCode['Digital']} />, this.onShowCodeClick)}
+            {SegmentItem('Trigger', <TriggerDemo showCode={!!this.state.showCode['Trigger']} />, this.onShowCodeClick)}
+            <div style={{width: '100%', marginTop: '5%'}} />
+            <Api />
+          </div>
+          <div style={{width: '60%', float: 'left', height: '300px'}} />
         </div>
-        <div style={{float: 'left', width: '60%'}}>
-          {SegmentItem('Line', <LineDemo showCode={!!this.state.showCode['Line']} />, this.onShowCodeClick)}
-          {SegmentItem('Digital', <DigitalDemo showCode={!!this.state.showCode['Digital']} />, this.onShowCodeClick)}
-        </div>
-        <div style={{width: '60%', float: 'left', marginTop: '5%'}}>
-          <Api />
-        </div>
-        <div style={{width: '60%', float: 'left', height: '300px'}} />
       </div>
     )
   }

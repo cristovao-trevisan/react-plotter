@@ -2,17 +2,25 @@ import React from 'react'
 import {Header, Table, Menu} from 'semantic-ui-react'
 import Code from './Code'
 
-const MenuItem = (title) => (
+const MenuHeader = (title) => (
+  <Menu.Item>
+    {title}
+  </Menu.Item>
+)
+
+const MenuItem = (title, id) => (
   <Menu.Item key={title}>
-    <a href={'#' + title}>{title}</a>
+    <a href={'#' + (id || title)}>{title}</a>
   </Menu.Item>
 )
 
 export const ApiItens = [
   MenuItem('Plotter'),
-  MenuItem('LineStyle'),
-  MenuItem('DigitalStyle'),
-  MenuItem('CircleMarker')
+  MenuHeader('Styles'),
+  MenuItem('Line', 'LineStyle'),
+  MenuItem('Digital', 'DigitalStyle'),
+  MenuHeader('Markers'),
+  MenuItem('Circle', 'CircleMarker')
 ]
 
 const plotterText =
@@ -29,7 +37,9 @@ const plotterText =
     min={-100}
     useMean={false}
     initialData={[]}
-    appendData={this.state.data} />
+    appendData={this.state.data}
+    trigger={0}
+    onlyFull />
 `
 export const Plotter = () => (
   <div style={{width: '100%'}} id='Plotter'>
@@ -50,6 +60,16 @@ export const Plotter = () => (
           <Table.Cell>style</Table.Cell>
           <Table.Cell>Function</Table.Cell>
           <Table.Cell>{'Style function (called to print the data)'}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>[trigger]</Table.Cell>
+          <Table.Cell>number</Table.Cell>
+          <Table.Cell>Use trigger</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>[onlyFull=true]</Table.Cell>
+          <Table.Cell>bool</Table.Cell>
+          <Table.Cell>When using trigger it tells if the view should wait for a complete dataset before updating</Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.Cell>[width=300]</Table.Cell>
@@ -106,7 +126,7 @@ let style = LineStyle({
 `
 export const LineStyle = () => (
   <div style={{width: '100%'}} id='LineStyle'>
-    <Header as='h2' content='LineStyle' />
+    <Header as='h2' content='Line' />
     <Code>
       {lineText}
     </Code>
@@ -153,7 +173,7 @@ let style = DigitalStyle({
 `
 export const DigitalStyle = () => (
   <div style={{width: '100%'}} id='DigitalStyle'>
-    <Header as='h2' content='DigitalStyle' />
+    <Header as='h2' content='Digital' />
     <Code>
       {digitalText}
     </Code>
@@ -200,7 +220,7 @@ let marker = CircleMarker({
 `
 export const CircleMarker = () => (
   <div style={{width: '100%'}} id='CircleMarker'>
-    <Header as='h2' content='CircleMarker' />
+    <Header as='h2' content='Circle' />
     <Code>
       {circleMarkerText}
     </Code>
@@ -232,20 +252,23 @@ export const CircleMarker = () => (
   </div>
 )
 
+const SectionHeader = ({title}) => (
+  <Header
+    as='h1'
+    textAlign='center'
+    content={title}
+    style={{ fontSize: '2.8em', fontWeight: 'normal' }} />
+)
+
 const Api = () => (
   <div style={{width: '100%'}}>
-    <Header
-      as='h1'
-      id='API'
-      textAlign='center'
-      content='API'
-      style={{ fontSize: '2.8em', fontWeight: 'normal' }} />
+    <SectionHeader title='API' />
     <Plotter />
-    <div style={{width: '100%', height: '30px'}} />
+    <SectionHeader title='Styles' />
     <LineStyle />
     <div style={{width: '100%', height: '30px'}} />
     <DigitalStyle />
-    <div style={{width: '100%', height: '30px'}} />
+    <SectionHeader title='Markers' />
     <CircleMarker />
   </div>
 )
