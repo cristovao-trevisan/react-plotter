@@ -1,3 +1,4 @@
+/* global CanvasRenderingContext2D */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { drawArrow } from './helpers/draw'
@@ -12,6 +13,12 @@ const reRenderProps = ['width', 'height', 'dataSize', 'max', 'min', 'style']
  * @abstract
  */
 class Plotter extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.updateCanvas = this.updateCanvas.bind(this)
+  }
+
   static defaultProps = {
     width: 300,
     height: 150,
@@ -109,6 +116,7 @@ class Plotter extends React.Component {
    * @param {boolean} [update=false] Used when the attributes are reset (inside the componentWillUpdate)
    */
   addData (data, redraw = false) {
+    if (!data) return
     let newData = data
     let {trigger} = this.props
     if (isFinite(trigger)) {
@@ -158,7 +166,7 @@ class Plotter extends React.Component {
     }
     this.renewCount += newData.length
     this.renewCount = Math.min(this.renewCount, this.props.dataSize)
-    this.animationRequest = window.requestAnimationFrame(this.updateCanvas.bind(this))
+    this.animationRequest = window.requestAnimationFrame(this.updateCanvas)
   }
 
   drawArrows () {
@@ -179,6 +187,7 @@ class Plotter extends React.Component {
   */
   updateCanvas () {
     if (this.renewCount < this.xSkip) return
+    if (!(this.context instanceof CanvasRenderingContext2D)) this.context = this.refs.canvas.getContext('2d')
     // 1
     this.drawingBufferContext.clearRect(0, 0, this.props.width, this.props.height)
     // 2
@@ -206,6 +215,7 @@ class Plotter extends React.Component {
     this.plotBufferContext.clearRect(0, 0, this.props.width, this.props.height)
     this.plotBufferContext.drawImage(this.drawingBuffer, 0, 0)
     // 5
+    // console.log(this, this.context)
     this.context.clearRect(0, 0, this.props.width, this.props.height)
     this.context.drawImage(this.plotBuffer, 0, 0)
     this.context.clearRect(0, 0, MARGIN, this.props.height)
