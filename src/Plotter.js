@@ -228,6 +228,7 @@ class Plotter extends React.Component {
     this.createBuffers()
     this.setAttributes()
     this.addData(this.props.initialData, true)
+    this.drawArrows()
   }
 
   shouldComponentUpdate (nextProps) {
@@ -240,8 +241,9 @@ class Plotter extends React.Component {
     return false
   }
 
-  componentWillUpdate () {
+  componentDidUpdate () {
     let oldBuffer = this.dataBuffer
+    this.context = this.refs.canvas.getContext('2d')
     this.createBuffers()
     this.setAttributes()
     this.addData(oldBuffer, true)
